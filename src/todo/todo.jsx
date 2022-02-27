@@ -3,7 +3,6 @@ import DataTable from "../shared/data-table/data-table";
 import useGetData from "../shared/api-call/getApiHook";
 import * as yup from 'yup';
 import { useFormik } from "formik";
-import usePostData from "../shared/api-call/postApiHook";
 import axios from "axios";
 
 function Todo() {
@@ -13,7 +12,8 @@ function Todo() {
     const column = [
         { name: 'Id', key: 'id' },
         { name: 'Department', key: 'department' },
-        { name: 'Description', key: 'description' }
+        { name: 'Description', key: 'description' },
+        { name: 'Action', key: 'action', buttons: ['edit', 'delete'] }
     ]
 
 
@@ -27,19 +27,58 @@ function Todo() {
 
 
     const onSubmit = async (values) => {
-        const res = await axios.post('http://localhost:3000/todo', values)
-        if (res.status == 201) {
-            apiCall()
+        try {
+            if (values.forUpdate) {
+                const res = await axios.put(`http://localhost:3000/todo/${values.id}`, values)
+                console.log(res)
+                if (res.status == 200) {
+                    apiCall()
+                    todoForm.resetForm();
+                }
+
+                return;
+            }
+            const res = await axios.post('http://localhost:3000/todo', values)
+            if (res.status == 201) {
+                apiCall()
+                todoForm.resetForm();
+            }
         }
-        console.log(res);
+        catch (error) {
+            console.log(error)
+        }
 
     }
 
     const todoForm = useFormik({
-        initialValues: { id: '', department: '', description: '' },
+        initialValues: { id: '', department: '', description: '', forUpdate: false },
         onSubmit,
         validationSchema,
     })
+
+    const editAction = (e) => {
+        console.log(e)
+        todoForm.setValues({
+            id: e.id,
+            department: e.department,
+            description: e.description,
+            forUpdate: true
+        })
+    }
+
+    const deleteAction = async (e) => {
+        try {
+            const res = await axios.delete(`http://localhost:3000/todo/${e.id}`)
+            console.log(res)
+            if (res.status == 200) {
+                apiCall()
+                todoForm.resetForm();
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     // useEffect(() => {
     //     console.log('app')
@@ -61,7 +100,7 @@ function Todo() {
                 <button type="submit">Save</button>
             </form>
             <hr />
-            <DataTable column={column} data={data}></DataTable>
+            <DataTable column={column} data={data} edit={editAction} delete={deleteAction}></DataTable>
         </>
     );
 }

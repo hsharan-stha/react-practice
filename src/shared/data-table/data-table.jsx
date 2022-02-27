@@ -24,7 +24,11 @@ function DataTable(props) {
                         <tr key={k}>
                             {
                                 column.map((h, l) =>
-                                    <td key={l}>{d[h.key]}</td>
+                                    <td key={l}>{h.key == 'action' ?
+                                        h.buttons.map((b, m) =>
+                                            <button onClick={() => b == 'edit' ? props.edit(d) : props.delete(d)} key={m}>{b}</button>
+                                        )
+                                        : d[h.key]}</td>
                                 )
                             }
                         </tr>
