@@ -5,7 +5,7 @@ function DataTable(props) {
     const { data, column } = props
 
     return (
-        <table className='table'>
+        <table className='table table-striped border border-bottom-0 border-secondary'>
             <thead>
                 <tr>
                     {

@@ -13,12 +13,23 @@ import {
 } from "../store/action";
 import "./home.css";
 import { useSelector } from "react-redux";
+import DataTable from "../shared/data-table/data-table";
 
 function Home() {
   const dispatch = useDispatch();
 
   const { data, isCreate } = useSelector((state) => state.product);
 
+
+  const column = [
+    { name: 'Id', key: 'id' },
+    { name: 'Name', key: 'name' },
+    { name: 'Description', key: 'description' },
+    { name: 'Image', key: 'image' },
+    { name: 'Quantity', key: 'quantity' },
+
+    { name: 'Action', key: 'action', buttons: ['edit', 'delete'] }
+]
 
 
   const history = useHistory();
@@ -172,8 +183,11 @@ function Home() {
             Create
           </button>
         </div>
+
         <div className="table-responsive">
-          <table className="table table-striped border border-bottom-0 border-secondary">
+        <DataTable column={column} data={data} edit={editData} delete={deleteFnx}></DataTable>
+
+          {/* <table className="table table-striped border border-bottom-0 border-secondary">
             <thead>
               <tr>
                 <th scope="col">S.N.</th>
@@ -219,7 +233,7 @@ function Home() {
                 );
               })}
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
       {/* Modal for production form*/}

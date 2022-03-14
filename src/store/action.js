@@ -1,11 +1,7 @@
 import ActionNames from "./constant";
 import axios from "axios";
 
-const Header = {
-  headers: {
-    Authorization: "Bearer " + localStorage.getItem("token"), //the token is a variable which holds the token
-  },
-};
+
 
 export const loginAction = () => {
   return {
@@ -43,7 +39,11 @@ export const createProductAction = (formValue) => {
     const response = await axios.post(
       "https://ecom-react-task.herokuapp.com/product",
       formValue,
-      Header
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"), //the token is a variable which holds the token
+        },
+      }
     );
     if (response) {
       dispatch({
@@ -59,7 +59,11 @@ export const updateProductAction = (formValue) => {
     const response = await axios.put(
       `https://ecom-react-task.herokuapp.com/product/${formValue["id"]}`,
       formValue,
-      Header
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"), //the token is a variable which holds the token
+        },
+      }
     );
     if (response) {
       dispatch({
@@ -74,7 +78,11 @@ export const deleteProductAction = (id) => {
   return async (dispatch) => {
     const response = await axios.delete(
       `https://ecom-react-task.herokuapp.com/product/${id}`,
-      Header
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"), //the token is a variable which holds the token
+        },
+      }
     );
     if (response) {
       dispatch({
